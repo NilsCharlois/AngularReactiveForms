@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {NgForm} from '@angular/forms'
+import { FormControl, FormGroup } from "@angular/forms";
+
 import { Customer } from "./Customer";
 
 @Component({
@@ -8,16 +9,23 @@ import { Customer } from "./Customer";
   styleUrls: ['./customers.component.css']
 })
 export class CustomersComponent implements OnInit {
+  customerForm: FormGroup;
   customer = new Customer();
 
   constructor() { }
 
   ngOnInit() {
+    this.customerForm = new FormGroup({
+      firstName: new FormControl(),
+      lastName: new FormControl(),
+      emailAddress: new FormControl(),
+      sendCatalog: new FormControl(true)
+    });
   }
 
-  save(customerForm: NgForm) {
-    console.log(customerForm.form);
-    console.log('Saved: ' + JSON.stringify(customerForm.value));
+  save() {
+    console.log(this.customerForm);
+    console.log('Saved: ' + JSON.stringify(this.customerForm.value));
   }
 
 }
