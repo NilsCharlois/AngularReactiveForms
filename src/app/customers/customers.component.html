@@ -120,11 +120,11 @@
           id="ratingId"
           type="number"
           formControlName="rating"
-          [ngClass]="{'is-invalid': (customerForm.get('rating').touched |||
+          [ngClass]="{'is-invalid': (customerForm.get('rating').touched ||
           customerForm.get('rating').dirty && 
           !customerForm.get('rating').valid)}" />
           <span class="invalid-feedback">
-            <span *nbIf="customerForm.get('rating').errors?.range">
+            <span *ngIf="customerForm.get('rating').errors?.range">
               Please rate your experience from 1 to 5
             </span>
           </span>
