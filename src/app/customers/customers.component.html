@@ -50,6 +50,7 @@
         </div>
       </div>
 
+      <!-- emailGroup contains the email and confirm email fields, needs to be put in a form group to allow cross-field validation -->
       <div formGroupName="emailGroup">
         <div class="form-group row mb-2">
           <label class="col-md-2 col-form-label"
@@ -60,17 +61,9 @@
                   type="email"
                   placeholder="Email (required)"
                   formControlName="emailAddress"
-                  [ngClass]="{'is-invalid': customerForm.get('emailGroup').errors ||
-                  ((customerForm.get('emailGroup.emailAddress').touched ||
-                  customerForm.get('emailGroup.emailAddress').dirty) &&
-                  !customerForm.get('emailGroup.emailAddress').valid) }" />
+                  [ngClass]="{'is-invalid': emailMessage }" />
             <span class="invalid-feedback">
-              <span *ngIf="customerForm.get('emailGroup.emailAddress').errors?.required">
-                Please enter your email address.
-              </span>
-              <span *ngIf="customerForm.get('emailGroup.emailAddress').errors?.email">
-                Please enter a valid email address.
-              </span>
+              {{emailMessage}}
             </span>
           </div>
         </div>
@@ -118,6 +111,7 @@
           </div>
         </div>
 
+      <!-- Send Notification: the ts class listens to any change to the radio buttons value -->
       <div class="form-group row mb-2">
         <label class="col-md-2 col-form-label pt-0">Send Notifications</label>
         <div class="col-md-8">
@@ -126,8 +120,7 @@
               <input class="form-check-input"
               type="radio"
               value="email"
-              formControlName="notification"
-              (click)="setNotification('email')">Email
+              formControlName="notification">Email
             </label>
           </div>
           <div class="form-check form-check-inline">
@@ -135,8 +128,7 @@
                 <input class="form-check-input"
                 type="radio"
                 value="text"
-                formControlName="notification"
-                (click)="setNotification('text')">Text
+                formControlName="notification">Text
               </label>
             </div>
         </div>
