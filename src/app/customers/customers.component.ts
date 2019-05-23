@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from "@angular/forms";
+import { FormArray, FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from "@angular/forms";
 
 import { debounceTime} from 'rxjs/operators'
 import { Customer } from "./Customer";
@@ -40,6 +40,10 @@ export class CustomersComponent implements OnInit {
   customer = new Customer();
   emailMessage: string;
 
+  get addressesFormArray(): FormArray{
+    return <FormArray>this.customerForm.get('addresses')
+  }
+
   private emailValidationMessage = {
     required: 'Please enter your email address.',
     email: 'Please enter a valid email address.'
@@ -58,7 +62,8 @@ export class CustomersComponent implements OnInit {
       phone: '',
       notification: 'email',
       rating: [null, ratingRange(1, 5)],
-      sendCatalog:true
+      sendCatalog:true,
+      addresses: this.fb.array([this.buildAddress()])
     });
 
     // subscribe to the value changed, better than binding the click event on the radio button
@@ -71,9 +76,25 @@ export class CustomersComponent implements OnInit {
     emailControl.valueChanges
     .pipe(
       debounceTime(1000)
-    ).subscribe(
+    )
+    .subscribe(
       value=>this.setEmailErrorMessage(emailControl)
     )
+  }
+
+  addAddress():void {
+    this.addressesFormArray.push(this.buildAddress());
+  }
+
+  buildAddress(): FormGroup {
+    return this.fb.group({
+      addressType: 'home',
+      street1: '',
+      street2: '',
+      city: '',
+      state: '',
+      zip: ''
+    })
   }
 
   populateTestData(): void {
@@ -92,6 +113,8 @@ export class CustomersComponent implements OnInit {
   // if an error needs to be displayed for the email field
   setEmailErrorMessage(c:AbstractControl):void {
     this.emailMessage = ''
+    console.log(this.emailValidationMessage);
+    
     if((c.touched || c.dirty ) && c.errors) {
       this.emailMessage = Object.keys(c.errors).map(
         key=>this.emailMessage += this.emailValidationMessage[key]).join('  ');
